@@ -7,6 +7,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@500&display=swap" rel="stylesheet"> 
+        <base href="/game">
         <style type="text/css">
             /*
   blauw: #4DB1D6
@@ -79,7 +80,7 @@
     </head>
     <body>
         <div id="demos">
-            <img src="assets/logo.png" alt="logo">
+            <img src="game/assets/logo.png" alt="logo">
         </div>        
 
         <script src="../dist/bundle.js"></script>
@@ -226,10 +227,10 @@
                 },
 
                 preload: function () {
-                    this.load.image("sky", "assets/sky.png");
-                    this.load.image("ground", "assets/platform.png");
-                    this.load.image("star", "assets/star.png");
-                    this.load.spritesheet("dude", "assets/dude.png", {
+                    this.load.image("sky", "game/assets/sky.png");
+                    this.load.image("ground", "game/assets/platform.png");
+                    this.load.image("star", "game/assets/star.png");
+                    this.load.spritesheet("dude", "game/assets/dude.png", {
                         frameWidth: 32,
                         frameHeight: 48,
                     });
@@ -264,7 +265,7 @@
                     gameOverText = this.add.text(
                         200,
                         300,
-                        "Helaas, je bent af!",
+                        "Helaas, fout antwoord.",
                         {
                             fontSize: "32px",
                             fill: "#ff0000",
@@ -743,7 +744,17 @@
                     gameElement = document.querySelector(
                         "body > canvas:nth-child(6)"
                     );
-                }               
+                }     
+                if (!gameElement) {
+                    gameElement = document.querySelector(
+                        "body > canvas:nth-child(5)"
+                    );
+                }       
+                if (!gameElement) {
+                    gameElement = document.querySelector(
+                        "body > canvas:nth-child(4)"
+                    );
+                }                 
                 gameElement.classList.add("gameCanvas");
                 gameElement.classList.add("hide");
 
