@@ -4,10 +4,13 @@
         <meta charset="UTF-8" />
         <title>GetallenExpeditie</title>
         <script src="https://cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@500&display=swap" rel="stylesheet"> 
-        <base href="/game">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@500&display=swap"
+            rel="stylesheet"
+        />
+        <base href="/game" />
         <style type="text/css">
             /*
   blauw: #4DB1D6
@@ -18,9 +21,9 @@
             body {
                 margin: 0;
                 display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: #bee6f4;
+                flex-direction: column;
+                justify-content: center;
+                background-color: #bee6f4;
             }
 
             #webcam {
@@ -38,7 +41,7 @@
                 position: absolute;
             }
 
-            .gameCanvas{
+            .gameCanvas {
                 max-width: 700px;
                 margin: 0 auto;
             }
@@ -48,12 +51,12 @@
                 padding: 20px;
                 border: 2px solid #231820;
                 border-radius: 5px;
-                background-color: #4DB1D6;
+                background-color: #4db1d6;
                 color: #231820;
-                font-family: 'Poppins', sans-serif;
+                font-family: "Poppins", sans-serif;
             }
 
-            #enableWebcamButton:active{
+            #enableWebcamButton:active {
                 background-color: #78949e;
             }
 
@@ -63,29 +66,31 @@
                 height: 100px;
             }
 
-            .controlsDiv{
-                font-family: 'Poppins', sans-serif;
+            .controlsDiv {
+                font-family: "Poppins", sans-serif;
                 color: #231820;
                 display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
 
-            .topSpace{
-                margin-top:10px;
+            .topSpace {
+                margin-top: 10px;
             }
-
         </style>
     </head>
     <body>
         <div id="demos">
-            <img src="game/assets/logo.png" alt="logo">
-        </div>        
+            <img src="game/assets/logo.png" alt="logo" />
+        </div>
 
         <script src="../dist/bundle.js"></script>
 
         <script type="text/javascript">
+
+             initPoseMarker();
+
             let config = {
                 type: Phaser.AUTO,
                 width: 800,
@@ -123,6 +128,7 @@
             let totalAwnsers = 0;
             let correctAwnsers = 0;
             let wrongAwnsers = 0;
+            let positionMarker;
 
             // mediapipe variables
             let trackingStart = false;
@@ -383,7 +389,7 @@
 
                     // keyboard controls
                     if (trackingStart == false) {
-                        if (cursors.left.isDown) {                            
+                        if (cursors.left.isDown) {
                             player.setVelocityX(-160);
                             player.anims.play("left", true);
                         } else if (cursors.right.isDown) {
@@ -446,10 +452,15 @@
                         fill: "#fff",
                     });
 
-                    this.add.text(200, 200, "Aantal sommen opgelost: " + totalAwnsers, {
-                        fontSize: "25px",
-                        fill: "#fff",
-                    });
+                    this.add.text(
+                        200,
+                        200,
+                        "Aantal sommen opgelost: " + totalAwnsers,
+                        {
+                            fontSize: "25px",
+                            fill: "#fff",
+                        }
+                    );
 
                     this.add.text(
                         200,
@@ -460,10 +471,15 @@
                             fill: "#fff",
                         }
                     );
-                    this.add.text(200, 300, "Fout beantwoord: " + wrongAwnsers, {
-                        fontSize: "25px",
-                        fill: "#fff",
-                    });
+                    this.add.text(
+                        200,
+                        300,
+                        "Fout beantwoord: " + wrongAwnsers,
+                        {
+                            fontSize: "25px",
+                            fill: "#fff",
+                        }
+                    );
 
                     var finalScore = 0;
                     if (correctAwnsers != 0) {
@@ -699,10 +715,29 @@
             }
 
             function initPoseMarker() {
-                const mediaDiv = document.getElementById("demos");
-                poseActivator.setOutputDiv(mediaDiv);
 
-                poseActivator.initWebcamButton(poseCameraProcessor);
+                const hasGetUserMedia = () =>
+                    !!navigator.mediaDevices?.getUserMedia;
+
+                if (hasGetUserMedia()) {
+                    const mediaDiv = document.getElementById("demos");
+                    poseActivator.setOutputDiv(mediaDiv);
+
+                    poseActivator.initWebcamButton(poseCameraProcessor);
+
+                    // listen to webcam button being clicked and positionMarker being ready.
+                    document.body.addEventListener(
+                        "webcamButtonClickCompleted",
+                        (event) => {
+                            // fetch the initialized positionMarker
+                            positionMarker = poseActivator.getPositionMarker();
+                        }
+                    );
+                } else {
+                    console.warn(
+                        "getUserMedia() is not supported by your browser"
+                    );
+                }
             }
 
             function readPosition() {
@@ -732,8 +767,8 @@
         </script>
 
         <script type="text/javascript">
-            document.addEventListener("DOMContentLoaded", function () {
 
+            document.addEventListener("DOMContentLoaded", function () {
                 var button = document.getElementById("enableWebcamButton");
                 button.innerText = "Start het spel";
 
@@ -744,17 +779,17 @@
                     gameElement = document.querySelector(
                         "body > canvas:nth-child(6)"
                     );
-                }     
+                }
                 if (!gameElement) {
                     gameElement = document.querySelector(
                         "body > canvas:nth-child(5)"
                     );
-                }       
+                }
                 if (!gameElement) {
                     gameElement = document.querySelector(
                         "body > canvas:nth-child(4)"
                     );
-                }                 
+                }
                 gameElement.classList.add("gameCanvas");
                 gameElement.classList.add("hide");
 
@@ -763,32 +798,37 @@
                     gameElement.classList.add("hide");
                 }
 
-
-                var bottomDiv = document.createElement('div');
+                var bottomDiv = document.createElement("div");
                 bottomDiv.classList.add("controlsDiv");
 
-                var doelHeader = document.createElement('h3');               
-                doelHeader.textContent = 'Doel:';     
-                var doel1 = document.createElement('span');
-                doel1.textContent = 'Verzamel de juiste sterren om het antwoord op de som te ontdekken.'; 
-                var doel2 = document.createElement('span');
-                doel2.textContent = 'Wees voorzichtig, want niet alle sterren dragen bij aan het juiste antwoord.';
-                var doel3 = document.createElement('span');
-                doel3.textContent = 'Wanneer je 500 punten hebt verzameld win je het spel.';
+                var doelHeader = document.createElement("h3");
+                doelHeader.textContent = "Doel:";
+                var doel1 = document.createElement("span");
+                doel1.textContent =
+                    "Verzamel de juiste sterren om het antwoord op de som te ontdekken.";
+                var doel2 = document.createElement("span");
+                doel2.textContent =
+                    "Wees voorzichtig, want niet alle sterren dragen bij aan het juiste antwoord.";
+                var doel3 = document.createElement("span");
+                doel3.textContent =
+                    "Wanneer je 500 punten hebt verzameld win je het spel.";
                 bottomDiv.appendChild(doelHeader);
                 bottomDiv.appendChild(doel1);
                 bottomDiv.appendChild(doel2);
                 bottomDiv.appendChild(doel3);
 
-                var controlsHeader = document.createElement('h3');
+                var controlsHeader = document.createElement("h3");
                 controlsHeader.classList.add("topSpace");
-                controlsHeader.textContent = 'Besturing:';              
-                var controls = document.createElement('span');
-                controls.textContent = 'Klik op de "Spatiebalk" om het spel met je lichaam te kunnen besturen.';              
-                var controls1 = document.createElement('span');
-                controls1.textContent = 'Ga midden voor je webcam staan en beweeg je poppetje door zelf te bewegen.';
-                var controls2 = document.createElement('span');
-                controls2.textContent = 'Klik op de "K" om het spel weer met de pijltjes te kunnen besturen.';
+                controlsHeader.textContent = "Besturing:";
+                var controls = document.createElement("span");
+                controls.textContent =
+                    'Klik op de "Spatiebalk" om het spel met je lichaam te kunnen besturen.';
+                var controls1 = document.createElement("span");
+                controls1.textContent =
+                    "Ga midden voor je webcam staan en beweeg je poppetje door zelf te bewegen.";
+                var controls2 = document.createElement("span");
+                controls2.textContent =
+                    'Klik op de "K" om het spel weer met de pijltjes te kunnen besturen.';
                 controls2.classList.add("topSpace");
                 bottomDiv.appendChild(controlsHeader);
                 bottomDiv.appendChild(controls);
@@ -798,7 +838,6 @@
 
                 // Add an event listener to the button
                 button.addEventListener("click", function () {
-                   
                     button.classList.add("hide");
                     gameElement.classList.remove("hide");
                 });
