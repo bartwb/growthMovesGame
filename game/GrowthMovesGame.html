@@ -408,6 +408,7 @@
 
                     // pose tracking controls
                     if (trackingStart == true) {
+                        
                         var positions = readPosition();
 
                         if (positions.length > 0) {
@@ -517,6 +518,7 @@
             game.scene.add("End", EndScene, false);
 
             function collectStar(player, star, gamescene) {
+                
                 gameOverText.setVisible(false);
                 correctText.setVisible(false);
 
@@ -597,6 +599,7 @@
             }
 
             function generateMathProblem(difficulty) {
+                
                 console.log(difficulty);
 
                 awnser = 0;
@@ -721,6 +724,7 @@
 
                 if (hasGetUserMedia()) {
                     const mediaDiv = document.getElementById("demos");
+                    
                     poseActivator.setOutputDiv(mediaDiv);
 
                     poseActivator.initWebcamButton(poseCameraProcessor);
